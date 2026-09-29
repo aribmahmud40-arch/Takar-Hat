@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#061f17">
+<title>Taka Hat</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
+<style>
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:#061f17;color:#fff;font-family:Arial,"Noto Sans Bengali",sans-serif}
+    body{min-height:100vh;background:radial-gradient(circle at 15% 0,#176c50 0,#082e23 38%,#031a13 100%)}
+    a{text-decoration:none;color:inherit}
+    button,input,select{font:inherit}
+    button{cursor:pointer;border:0}
+    .wrap{max-width:520px;margin:auto;padding:18px 15px 100px}
+    .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
+    .brand{display:flex;align-items:center;gap:11px}
+    .brandIcon{width:48px;height:48px;border-radius:16px;background:linear-gradient(145deg,#ffe47a,#c99518);display:grid;place-items:center;font-size:25px;box-shadow:0 8px 22px #0007}
+    .brandName{font-size:21px;font-weight:900}
+    .brandSub{font-size:11px;opacity:.65;margin-top:3px}
+    .bell{width:43px;height:43px;border-radius:50%;background:#ffffff12;color:#ffd75a;font-size:20px}
+    .hero{position:relative;overflow:hidden;border:1px solid #ffffff18;border-radius:25px;padding:20px;background:linear-gradient(135deg,#0e9b6c,#07543d);box-shadow:0 16px 38px #0007}
+    .hero:after{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-85px;top:-90px;background:#fff10}
+    .eyebrow{font-size:12px;opacity:.72}
+    .money{font-size:36px;font-weight:950;margin-top:5px}
+    .money b{color:#ffe066}
+    .today{font-size:12px;opacity:.75;margin-top:5px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}
+    .stat{background:#ffffff10;border:1px solid #ffffff14;border-radius:16px;padding:11px 5px;text-align:center}
+    .stat strong{display:block;font-size:15px}.stat span{font-size:10px;opacity:.62}
+    .title{font-size:18px;font-weight:900;margin:22px 2px 10px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+    .card{min-height:135px;text-align:left;color:#fff;border-radius:21px;padding:16px;background:linear-gradient(145deg,#106d4f,#083e2e);border:1px solid #ffffff16;box-shadow:0 10px 25px #0005;transition:.15s}
+    .card:active{transform:scale(.975)}
+    .icon{font-size:29px;margin-bottom:12px}.ct{font-size:15px;font-weight:900}.cs{font-size:11px;opacity:.62;margin-top:5px;line-height:1.4}
+    .limit{display:flex;justify-content:space-between;margin-top:11px;padding:7px 9px;border-radius:10px;background:#0003;font-size:10px}
+    .join{width:100%;padding:15px;border-radius:16px;background:linear-gradient(145deg,#199ce0,#09649b);color:#fff;font-weight:900;box-shadow:0 9px 20px #0004}
+    .panel{background:#ffffff0d;border:1px solid #ffffff14;border-radius:21px;padding:16px;margin-top:10px}
+    .panelHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+    .muted{font-size:11px;opacity:.62}
+    .adbtn,.withdraw,.save{width:100%;padding:14px;border-radius:14px;background:linear-gradient(145deg,#19aa78,#08724f);color:#fff;font-weight:900}
+    .adbtn:disabled,.spinBtn:disabled{opacity:.45}
+    .wheelBox{text-align:center}.wheelWrap{width:260px;height:260px;margin:15px auto;position:relative}
+    .pointer{position:absolute;z-index:4;left:50%;top:-8px;transform:translateX(-50%);border-left:14px solid transparent;border-right:14px solid transparent;border-top:29px solid #fff;filter:drop-shadow(0 3px 4px #000)}
+    .wheel{width:260px;height:260px;border-radius:50%;border:9px solid #f3c94b;background:conic-gradient(#0e9b6c 0 45deg,#168bd1 45deg 90deg,#9b55d6 90deg 135deg,#e58b22 135deg 180deg,#d74848 180deg 225deg,#2aa95c 225deg 270deg,#c44c91 270deg 315deg,#7255b8 315deg 360deg);box-shadow:0 12px 32px #0008,inset 0 0 0 4px #ffffff33;transition:transform 4s cubic-bezier(.15,.75,.12,1)}
+    .wheel:after{content:none;position:absolute;width:62px;height:62px;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg,#ffe77c,#d79a14);border:5px solid #fff;box-shadow:0 4px 12px #0008}
+    .wheelLabels{position:absolute;inset:0;z-index:2;pointer-events:none}
+    .wl{position:absolute;left:50%;top:50%;width:58px;text-align:center;font-size:11px;font-weight:950;color:#fff;text-shadow:0 2px 3px #000;transform-origin:0 0}
+
+    .wheelLabels:after{content:"";position:absolute;left:50%;top:50%;width:62px;height:62px;border-radius:50%;transform:translate(-50%,-50%);background:linear-gradient(145deg,#ffe77c,#d79a14);border:5px solid #fff;box-shadow:0 4px 12px #0008}
+    .spinBtn{padding:14px 28px;border-radius:15px;background:linear-gradient(145deg,#ffd95b,#d79a0b);color:#2b2100;font-weight:950}
+    .result{min-height:25px;color:#ffdc61;font-weight:900;margin-top:10px}
+    label{display:block;font-size:11px;opacity:.7;margin:11px 0 6px}
+    input,select{width:100%;padding:13px;border-radius:13px;border:1px solid #ffffff1a;background:#0004;color:#fff;outline:0}
+    select option{color:#111}
+    .history{display:grid;gap:8px}.row{display:flex;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid #ffffff12;font-size:12px}.row:last-child{border:0}
+    .status{padding:4px 7px;border-radius:7px;font-size:9px;background:#e9ad2630;color:#ffd75a}
+    .nav{position:fixed;z-index:50;bottom:0;left:0;right:0;height:72px;background:#03261df2;backdrop-filter:blur(15px);border-top:1px solid #ffffff14}
+    .navin{max-width:520px;height:100%;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}
+    .nav button{background:none;color:#ffffff70;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:10px}.nav button b{font-size:21px}.nav .active{color:#ffd75a}
+    .page{display:none}.page.active{display:block}
+    .toast{position:fixed;z-index:100;left:50%;bottom:88px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#111e;border:1px solid #ffffff20;padding:11px 15px;border-radius:12px;font-size:12px;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+  </style>
+</head>
+<body>
+
+        <div class="wrap">
+          <div class="top">
+            <div class="brand">
+              <div class="brandIcon">🪙</div>
+              <div><div class="brandName">টাকার হাট</div><div class="brandSub">Earn • Rewards • Wallet</div></div>
+            </div>
+            <button class="bell" onclick="toast('Notifications')">🔔</button>
+          </div>
+
+          <section id="home" class="page active">
+            <div class="hero">
+              <div class="eyebrow">Available balance • BDT • Active</div>
+              <div class="money">৳ <b id="bal">0.00</b> BDT</div>
+              <div class="today">Today: ৳ <span id="todayEarn">0.00</span></div>
+              <div class="stats">
+                <div class="stat"><strong id="ads">0</strong><span>Ads today</span></div>
+                <div class="stat"><strong id="refs">0</strong><span>Referrals</span></div>
+                <div class="stat"><strong id="streak">0</strong><span>Streak</span></div>
+              </div>
+            </div>
+
+            <div class="title">Quick earn</div>
+            <div class="grid">
+              <button class="card" onclick="go('earn')"><div class="icon">🎁</div><div class="ct">Watch &amp; Earn</div><div class="cs">Rewarded ad সম্পূর্ণ করে reward নিন।</div><div class="limit"><span>Today limit</span><b id="adRemain">50</b></div></button>
+              <button class="card" onclick="go('spin')"><div class="icon">🎡</div><div class="ct">Lucky Spin</div><div class="cs">Daily spin chance ব্যবহার করুন।</div><div class="limit"><span>Spins left</span><b id="spinRemain">1</b></div></button>
+              <button class="card" onclick="toast('Daily Check-in')"><div class="icon">🎁</div><div class="ct">Daily Check-in</div><div class="cs">প্রতিদিন একবার bonus claim করুন।</div></button>
+              <button class="card" onclick="go('ref')"><div class="icon">👥</div><div class="ct">Refer &amp; Earn</div><div class="cs">বন্ধু invite করে reward নিন।</div></button>
+            </div>
+
+            <div class="title">Community</div>
+            <button class="join" onclick="join()">📢 জয়েন করুন</button>
+          </section>
+
+          <section id="earn" class="page">
+            <div class="title">🎁 Watch &amp; Earn</div>
+            <div class="panel">
+              <div class="panelHead"><b>Rewarded Advertisement</b><span class="muted">Left: <b id="adLeft">50</b></span></div>
+              <p class="muted">সম্পূর্ণ rewarded ad দেখলে reward যোগ হবে।</p><br/>
+              <button class="adbtn" id="adBtn" onclick="watchAd()">🎬 Watch Ad</button>
+            </div>
+          </section>
+
+          <section id="spin" class="page">
+            <div class="title">🎡 Lucky Spin</div>
+            <div class="panel wheelBox">
+              <div class="muted">আজকের Spin বাকি: <b id="spinLeft">1</b></div>
+              <div class="wheelWrap">
+  <div class="pointer"></div>
+  <div class="wheel" id="wheel">
+    <div class="wheelLabels" id="wheelLabels"></div>
+  </div>
+</div>
+              <button class="spinBtn" id="spinBtn" onclick="spin()">SPIN NOW</button>
+              <div class="result" id="spinResult"></div>
+            </div>
+          </section>
+
+          <section id="withdraw" class="page">
+            <div class="title">💸 Withdraw</div>
+            <div class="panel">
+              <label>Payment Method</label>
+              <select id="method"><option value="">Select method</option><option>bKash</option><option>Nagad</option><option>Rocket</option></select>
+              <label>Account Number</label><input id="number" placeholder="01XXXXXXXXX" inputmode="numeric"/>
+              <label>Amount (BDT)</label><input id="amount" type="number" placeholder="50"/>
+              <br/><br/><button class="withdraw" onclick="withdraw()">💸 Withdraw Request</button>
+            </div>
+            <div class="title">📜 History</div>
+            <div class="panel history" id="history"><div class="muted">No withdrawal yet.</div></div>
+          </section>
+
+          <section id="ref" class="page">
+            <div class="title">👥 Refer &amp; Earn</div>
+            <div class="panel">
+              <b>Your referral link</b>
+              <p class="muted" id="refLink" style="word-break:break-all;margin-top:10px"></p>
+              <br/><button class="join" onclick="copyRef()">📋 Copy Link</button>
+            </div>
+          </section>
+
+          <section id="profile" class="page">
+            <div class="title">👤 Profile</div>
+            <div class="panel">
+              <div class="row"><span>Name</span><b id="name">Guest</b></div>
+              <div class="row"><span>Telegram ID</span><b id="uid">—</b></div>
+              <div class="row"><span>Balance</span><b id="pbal">0.00 BDT</b></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="nav"><div class="navin">
+          <button class="active" onclick="go('home',this)"><b>🏠</b>Home</button>
+          <button onclick="go('earn',this)"><b>🎁</b>Earn</button>
+          <button onclick="go('withdraw',this)"><b>💸</b>Withdraw</button>
+          <button onclick="go('profile',this)"><b>👤</b>Profile</button>
+        </div></div>
+        <div id="toast" class="toast"></div>
+
+        <script>
+                const DEFAULT_S={adReward:0.02,adLimit:50,spinLimit:1,min:50,channel:"https://t.me/TakarHat_Bot",
+spinRewards:[{amount:.10,chance:25},{amount:.20,chance:25},{amount:.50,chance:20},{amount:1,chance:15},{amount:2,chance:10},{amount:5,chance:5}]};
+let S=JSON.parse(localStorage.getItem("takaHatSettings")||"null")||DEFAULT_S;
+S.spinRewards=S.spinRewards||DEFAULT_S.spinRewards;
+        let D=JSON.parse(localStorage.getItem("TakaHatUser")||'{"balance":0,"today":0,"ads":0,"spins":0,"refs":0,"history":[]}');
+        function save(){localStorage.setItem("TakaHatUser",JSON.stringify(D));}
+        function toast(x){let t=document.getElementById("toast");t.textContent=x;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+        function go(id,btn){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));document.getElementById(id).classList.add("active");document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active"));if(btn)btn.classList.add("active");scrollTo(0,0)}
+        function loadAdminSpinSettings(){
+  const x=JSON.parse(localStorage.getItem("takaHatSettings")||"null");
+  if(x){
+    S={...S,...x};
+    if(Array.isArray(x.spinRewards))S.spinRewards=x.spinRewards;
+  }
+}
+function renderWheelLabels(){
+  const box=document.getElementById("wheelLabels");
+  if(!box)return;
+  const rewards=S.spinRewards||[];
+  const n=Math.max(1,rewards.length);
+  box.innerHTML=rewards.map((r,i)=>{
+    const angle=(i+0.5)*(360/n);
+    return '<span class="wl" style="transform:rotate('+angle+'deg) translate(68px,-8px)">৳'+Number(r.amount||0).toFixed(2)+'</span>';
+  }).join("");
+}
+function weightedReward(){
+  const arr=(S.spinRewards||[]).filter(r=>Number(r.chance)>0);
+  if(!arr.length)return {amount:0};
+  const total=arr.reduce((n,r)=>n+Number(r.chance||0),0);
+  let x=Math.random()*total;
+  for(const r of arr){x-=Number(r.chance||0);if(x<=0)return r;}
+  return arr[arr.length-1];
+}
+function render(){loadAdminSpinSettings();renderWheelLabels();document.getElementById("bal").textContent=D.balance.toFixed(2);document.getElementById("pbal").textContent=D.balance.toFixed(2)+" BDT";document.getElementById("todayEarn").textContent=D.today.toFixed(2);document.getElementById("ads").textContent=D.ads;document.getElementById("refs").textContent=D.refs;let ar=Math.max(0,S.adLimit-D.ads),sr=Math.max(0,S.spinLimit-D.spins);["adRemain","adLeft"].forEach(id=>document.getElementById(id).textContent=ar);["spinRemain","spinLeft"].forEach(id=>document.getElementById(id).textContent=sr);document.getElementById("adBtn").disabled=ar<=0;document.getElementById("spinBtn").disabled=sr<=0;document.getElementById("pbal").textContent=D.balance.toFixed(2)+" BDT";document.getElementById("history").innerHTML=D.history.length?D.history.map(x=>'<div class="row"><span>'+x.method+'<br/><small>'+x.number+'</small></span><span>৳'+x.amount.toFixed(2)+'<br/><span class="status">'+x.status+'</span></span></div>').join(""):'<div class="muted">No withdrawal yet.</div>'}
+        function watchAd(){if(D.ads>=S.adLimit)return toast("আজকের ad limit শেষ");toast("AdsGram setup required");}
+        function spin(){if(D.spins>=S.spinLimit)return toast("আজকের spin limit শেষ");let w=document.getElementById("wheel");w.style.transform="rotate("+(1800+Math.floor(Math.random()*360))+"deg)";document.getElementById("spinBtn").disabled=true;setTimeout(()=>{let r=weightedReward().amount;D.spins++;D.balance+=r;D.today+=r;save();document.getElementById("spinResult").textContent="🎉 আপনি পেয়েছেন ৳"+r.toFixed(2);render()},4100)}
+        function withdraw(){let m=document.getElementById("method").value,n=document.getElementById("number").value.trim(),a=Number(document.getElementById("amount").value);if(!m||n.length<10||a<S.min)return toast("সব তথ্য সঠিকভাবে দিন");if(a>D.balance)return toast("Balance কম");D.balance-=a;D.history.unshift({method:m,number:n,amount:a,status:"PENDING"});save();render();toast("Withdrawal request submitted")}
+        function join(){location.href=S.channel}
+        function copyRef(){navigator.clipboard?.writeText(document.getElementById("refLink").textContent);toast("Copied")}
+        let tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();let u=tg.initDataUnsafe?.user;if(u){document.getElementById("name").textContent=(u.first_name||"")+" "+(u.last_name||"");document.getElementById("uid").textContent=u.id;document.getElementById("refLink").textContent="https://t.me/TakarHat_Bot/app?startapp=ref_"+u.id}}else document.getElementById("refLink").textContent="https://t.me/TakarHat_Bot/app?startapp=ref_USER_ID";render();
+                </script>
+      
+</body>
+</html>
